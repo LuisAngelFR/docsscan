@@ -7,6 +7,9 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    fontFamily: {
+      'jua': ['jua', 'system-ui', 'sans-serif']
+    }
   },
   plugins: [],
 }
