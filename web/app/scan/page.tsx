@@ -29,7 +29,7 @@ export default function ScanPage() {
 
       formData.append('img', file)
 
-      fetch('http://192.168.8.2:5000/scan-doc', {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/scan-doc`, {
         method: 'POST',
         body: formData
       }).then(res => {
