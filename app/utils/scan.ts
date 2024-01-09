@@ -79,8 +79,11 @@ export const extractPaper = (image: HTMLImageElement): HTMLCanvasElement | null 
 
   let warpedDst = new cv.Mat()
 
-  const resultWidth = 255
-  const resultHeight = 255
+  const topWidth = topRight.x - topLeft.x
+  const rightHeight = bottomRight.y - topLeft.x
+
+  const resultWidth = topWidth
+  const resultHeight = rightHeight
 
   let dsize = new cv.Size(resultWidth, resultHeight)
   let srcTri = cv.matFromArray(4, 1, cv.CV_32FC2, [

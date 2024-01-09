@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@fontsource/jua": "5.0.17",
+    "jspdf": "2.5.1",
     "next": "14.0.4",
     "opencv-ts": "1.3.6",
     "react": "18",
