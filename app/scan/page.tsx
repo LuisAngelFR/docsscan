@@ -6,18 +6,12 @@ import { toast } from 'sonner'
 
 import { ImageOptions, jsPDF } from 'jspdf'
 
-interface PreviewImage {
-  src: string,
-  width: number,
-  height: number,
-  element: HTMLCanvasElement
-}
-
 export default function ScanPage() {
 
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
-  const [preview, setPreview] = useState<PreviewImage | null>(null)
+  const [preview, setPreview] = useState<string | null>(null)
   const [filename, setFilename] = useState<string | null>(null)
+  const [downloadData, setDownloadData] = useState<string | null>(null)
 
   const handleSelectImageFile = () => {
     document.getElementById('input-image')?.click()
@@ -57,12 +51,26 @@ export default function ScanPage() {
             return
           }
 
-          setPreview({
-            src: canvasRes.toDataURL(),
+          const canvasDataUrl = canvasRes.toDataURL()
+
+          setPreview(canvasDataUrl)
+
+          const doc = new jsPDF(canvasRes.width > canvasRes.height ? 'l' : 'p', 'px', [canvasRes.width, canvasRes.height])
+
+          const options: ImageOptions = {
+            imageData: canvasDataUrl,
+            format: 'PNG',
+            x: 0,
+            y: 0,
             width: canvasRes.width,
-            height: canvasRes.height,
-            element: canvasRes
-          })
+            height: canvasRes.height
+          }
+
+          doc.addImage(options)
+
+          const out = doc.output()
+
+          setDownloadData('data:application/pdf;base64,' + btoa(out))
 
           toast.message('Imagen Procesada Correctamente')
         }
@@ -74,27 +82,12 @@ export default function ScanPage() {
 
   const handleDownloadPdf = () => {
 
-    if (!uploadedImage || !preview) {
+    if (!downloadData) {
       return
     }
 
-    const doc = new jsPDF(preview.width > preview.height ? 'l' : 'p', 'px', [preview.width, preview.height])
-
-    const options: ImageOptions = {
-      imageData: preview.src,
-      format: 'PNG',
-      x: 0,
-      y: 0,
-      width: preview.width,
-      height: preview.height
-    }
-
-    doc.addImage(options)
-
-    const out = doc.output()
-    const pdfBase64 = 'data:application/pdf;base64,' + btoa(out)
     const link = document.createElement('a')
-    link.href = pdfBase64
+    link.href = downloadData
     link.download = `${filename}.pdf`
     link.click()
     URL.revokeObjectURL(link.href)
@@ -118,7 +111,7 @@ export default function ScanPage() {
         <section className='flex flex-1 items-center border-2 border-indigo-200 justify-center max-w-[500px]  rounded-md bg-indigo-200/10 aspect-[210/279]'>
           {
             preview ? (
-              <img src={preview.src} alt='' className='rounded-md w-full object-contain'></img>
+              <img src={preview} alt='' className='rounded-md w-full object-contain'></img>
             ) : (
               <p className='text-indigo-300 font-medium text-sm'>
                 Preview no Disponible
@@ -127,7 +120,7 @@ export default function ScanPage() {
           }
         </section>
       </div>
-      <button onClick={handleDownloadPdf} className={`w-1/2 mt-4 border-2 py-1 px-2 rounded-md border-indigo-200 font-semibold ${preview ? 'border-indigo-400 bg-indigo-400 text-white hover:bg-indigo-500 hover:border-indigo-500' : 'text-indigo-300'} transition`} disabled={!preview}>Descargar PDF</button>
+      <button onClick={handleDownloadPdf} className={`w-1/2 mt-4 border-2 py-1 px-2 rounded-md border-indigo-200 font-semibold ${downloadData ? 'border-indigo-400 bg-indigo-400 text-white hover:bg-indigo-500 hover:border-indigo-500' : 'text-indigo-300'} transition`} disabled={!downloadData}>Descargar PDF</button>
     </main>
   )
 }
