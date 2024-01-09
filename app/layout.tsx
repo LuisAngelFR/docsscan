@@ -8,13 +8,13 @@ import Toast from '@/components/Toast'
 export const metadata: Metadata = {
   title: 'docsscan',
   description: 'Digitaliza Documentos Fácilmente',
-  metadataBase: new URL('http://192.168.8.2:3000'),
+  metadataBase: new URL('https://docsscan.luisruiz.dev'),
   openGraph: {
     url: 'https://docsscan.luisruiz.dev',
     siteName: 'DOCSSCAN',
     images: [
       {
-        url: 'http://192.168.8.2:3000/og.jpg',
+        url: 'https://docsscan.luisruiz.dev/og.jpg',
         width: 960,
         height: 720
       }

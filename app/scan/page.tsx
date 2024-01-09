@@ -24,7 +24,7 @@ export default function ScanPage() {
 
     const file = e.target.files[0]
 
-    setFilename(file.name)
+    setFilename(file.name.split('.')[0])
 
     const reader = new FileReader()
 

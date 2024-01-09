@@ -1,1 +1,1 @@
-![Preview](./web/public/og.jpg)
+![Preview](./public/og.jpg)
